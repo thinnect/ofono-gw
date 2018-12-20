@@ -1675,6 +1675,7 @@ static struct {
 	{ "samsung",	"option",	"04e8", "6889"	},
 	{ "samsung",	"kalmia"			},
 	{ "quectel",	"option",	"05c6", "9090"	},
+	{ "quectel",	"option",	"05c6", "9003"	}, /* Quectel UC20 */
 	{ "quectelqmi",	"qmi_wwan",	"2c7c", "0121"	},
 	{ "quectelqmi",	"qcserial",	"2c7c", "0121"	},
 	{ "quectelqmi",	"qmi_wwan",	"2c7c", "0125"	},
