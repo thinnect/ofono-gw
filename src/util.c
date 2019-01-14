@@ -29,7 +29,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#include <glib.h>
+#include <ell/ell.h>
 
 #include "util.h"
 
@@ -64,9 +64,6 @@
 
 #define UTF8_LENGTH(c) \
 	((c) < 0x80 ? 1 : ((c) < 0x800 ? 2 : 3))
-
-#define TABLE_SIZE(t) \
-	(sizeof((t)) / sizeof(struct codepoint))
 
 struct codepoint {
 	unsigned short from;
@@ -2690,7 +2687,7 @@ static unsigned short unicode_single_shift_lookup(struct conversion_table *t,
 	return codepoint_lookup(&key, t->single_u, t->single_len_u);
 }
 
-static gboolean populate_locking_shift(struct conversion_table *t,
+static bool populate_locking_shift(struct conversion_table *t,
 					enum gsm_dialect lang)
 {
 	switch (lang) {
@@ -2698,192 +2695,192 @@ static gboolean populate_locking_shift(struct conversion_table *t,
 	case GSM_DIALECT_SPANISH:
 		t->locking_g = def_gsm;
 		t->locking_u = def_unicode;
-		t->locking_len_u = TABLE_SIZE(def_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(def_unicode);
+		return true;
 
 	case GSM_DIALECT_TURKISH:
 		t->locking_g = tur_gsm;
 		t->locking_u = tur_unicode;
-		t->locking_len_u = TABLE_SIZE(tur_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(tur_unicode);
+		return true;
 
 	case GSM_DIALECT_PORTUGUESE:
 		t->locking_g = por_gsm;
 		t->locking_u = por_unicode;
-		t->locking_len_u = TABLE_SIZE(por_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(por_unicode);
+		return true;
 
 	case GSM_DIALECT_BENGALI:
 		t->locking_g = ben_gsm;
 		t->locking_u = ben_unicode;
-		t->locking_len_u = TABLE_SIZE(ben_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(ben_unicode);
+		return true;
 
 	case GSM_DIALECT_GUJARATI:
                 t->locking_g = guj_gsm;
                 t->locking_u = guj_unicode;
-                t->locking_len_u = TABLE_SIZE(guj_unicode);
-                return TRUE;
+                t->locking_len_u = L_ARRAY_SIZE(guj_unicode);
+                return true;
 
 	case GSM_DIALECT_HINDI:
 		t->locking_g = hin_gsm;
 		t->locking_u = hin_unicode;
-		t->locking_len_u = TABLE_SIZE(hin_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(hin_unicode);
+		return true;
 
 	case GSM_DIALECT_KANNADA:
 		t->locking_g = kan_gsm;
 		t->locking_u = kan_unicode;
-		t->locking_len_u = TABLE_SIZE(kan_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(kan_unicode);
+		return true;
 
 	case GSM_DIALECT_MALAYALAM:
 		t->locking_g = mal_gsm;
 		t->locking_u = mal_unicode;
-		t->locking_len_u = TABLE_SIZE(mal_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(mal_unicode);
+		return true;
 
 	case GSM_DIALECT_ORIYA:
 		t->locking_g = ori_gsm;
 		t->locking_u = ori_unicode;
-		t->locking_len_u = TABLE_SIZE(ori_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(ori_unicode);
+		return true;
 
 	case GSM_DIALECT_PUNJABI:
 		t->locking_g = pun_gsm;
 		t->locking_u = pun_unicode;
-		t->locking_len_u = TABLE_SIZE(pun_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(pun_unicode);
+		return true;
 
 	case GSM_DIALECT_TAMIL:
 		t->locking_g = tam_gsm;
 		t->locking_u = tam_unicode;
-		t->locking_len_u = TABLE_SIZE(tam_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(tam_unicode);
+		return true;
 
 	case GSM_DIALECT_TELUGU:
 		t->locking_g = tel_gsm;
 		t->locking_u = tel_unicode;
-		t->locking_len_u = TABLE_SIZE(tel_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(tel_unicode);
+		return true;
 
 	case GSM_DIALECT_URDU:
 		t->locking_g = urd_gsm;
 		t->locking_u = urd_unicode;
-		t->locking_len_u = TABLE_SIZE(urd_unicode);
-		return TRUE;
+		t->locking_len_u = L_ARRAY_SIZE(urd_unicode);
+		return true;
         }
 
-	return FALSE;
+	return false;
 }
 
-static gboolean populate_single_shift(struct conversion_table *t,
+static bool populate_single_shift(struct conversion_table *t,
 					enum gsm_dialect lang)
 {
 	switch (lang) {
 	case GSM_DIALECT_DEFAULT:
 		t->single_g = def_ext_gsm;
-		t->single_len_g = TABLE_SIZE(def_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(def_ext_gsm);
 		t->single_u = def_ext_unicode;
-		t->single_len_u = TABLE_SIZE(def_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(def_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_TURKISH:
 		t->single_g = tur_ext_gsm;
-		t->single_len_g = TABLE_SIZE(tur_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(tur_ext_gsm);
 		t->single_u = tur_ext_unicode;
-		t->single_len_u = TABLE_SIZE(tur_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(tur_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_SPANISH:
 		t->single_g = spa_ext_gsm;
-		t->single_len_g = TABLE_SIZE(spa_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(spa_ext_gsm);
 		t->single_u = spa_ext_unicode;
-		t->single_len_u = TABLE_SIZE(spa_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(spa_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_PORTUGUESE:
 		t->single_g = por_ext_gsm;
-		t->single_len_g = TABLE_SIZE(por_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(por_ext_gsm);
 		t->single_u = por_ext_unicode;
-		t->single_len_u = TABLE_SIZE(por_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(por_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_BENGALI:
 		t->single_g = ben_ext_gsm;
-		t->single_len_g = TABLE_SIZE(ben_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(ben_ext_gsm);
 		t->single_u = ben_ext_unicode;
-		t->single_len_u = TABLE_SIZE(ben_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(ben_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_GUJARATI:
                 t->single_g = guj_ext_gsm;
-                t->single_len_g = TABLE_SIZE(guj_ext_gsm);
+                t->single_len_g = L_ARRAY_SIZE(guj_ext_gsm);
                 t->single_u = guj_ext_unicode;
-                t->single_len_u = TABLE_SIZE(guj_ext_unicode);
-                return TRUE;
+                t->single_len_u = L_ARRAY_SIZE(guj_ext_unicode);
+                return true;
 
 	case GSM_DIALECT_HINDI:
 		t->single_g = hin_ext_gsm;
-		t->single_len_g = TABLE_SIZE(hin_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(hin_ext_gsm);
 		t->single_u = hin_ext_unicode;
-		t->single_len_u = TABLE_SIZE(hin_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(hin_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_KANNADA:
 		t->single_g = kan_ext_gsm;
-		t->single_len_g = TABLE_SIZE(kan_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(kan_ext_gsm);
 		t->single_u = kan_ext_unicode;
-		t->single_len_u = TABLE_SIZE(kan_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(kan_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_MALAYALAM:
 		t->single_g = mal_ext_gsm;
-		t->single_len_g = TABLE_SIZE(mal_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(mal_ext_gsm);
 		t->single_u = mal_ext_unicode;
-		t->single_len_u = TABLE_SIZE(mal_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(mal_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_ORIYA:
 		t->single_g = ori_ext_gsm;
-		t->single_len_g = TABLE_SIZE(ori_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(ori_ext_gsm);
 		t->single_u = ori_ext_unicode;
-		t->single_len_u = TABLE_SIZE(ori_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(ori_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_PUNJABI:
 		t->single_g = pun_ext_gsm;
-		t->single_len_g = TABLE_SIZE(pun_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(pun_ext_gsm);
 		t->single_u = pun_ext_unicode;
-		t->single_len_u = TABLE_SIZE(pun_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(pun_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_TAMIL:
 		t->single_g = tam_ext_gsm;
-		t->single_len_g = TABLE_SIZE(tam_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(tam_ext_gsm);
 		t->single_u = tam_ext_unicode;
-		t->single_len_u = TABLE_SIZE(tam_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(tam_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_TELUGU:
 		t->single_g = tel_ext_gsm;
-		t->single_len_g = TABLE_SIZE(tel_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(tel_ext_gsm);
 		t->single_u = tel_ext_unicode;
-		t->single_len_u = TABLE_SIZE(tel_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(tel_ext_unicode);
+		return true;
 
 	case GSM_DIALECT_URDU:
 		t->single_g = urd_ext_gsm;
-		t->single_len_g = TABLE_SIZE(urd_ext_gsm);
+		t->single_len_g = L_ARRAY_SIZE(urd_ext_gsm);
 		t->single_u = urd_ext_unicode;
-		t->single_len_u = TABLE_SIZE(urd_ext_unicode);
-		return TRUE;
+		t->single_len_u = L_ARRAY_SIZE(urd_ext_unicode);
+		return true;
         }
 
-	return FALSE;
+	return false;
 }
 
-static gboolean conversion_table_init(struct conversion_table *t,
+static bool conversion_table_init(struct conversion_table *t,
 					enum gsm_dialect locking,
 					enum gsm_dialect single)
 {
@@ -2919,7 +2916,7 @@ char *convert_gsm_to_utf8_with_lang(const unsigned char *text, long len,
 
 	struct conversion_table t;
 
-	if (conversion_table_init(&t, locking_lang, single_lang) == FALSE)
+	if (!conversion_table_init(&t, locking_lang, single_lang))
 		return NULL;
 
 	if (len < 0 && !terminator)
@@ -2967,10 +2964,7 @@ char *convert_gsm_to_utf8_with_lang(const unsigned char *text, long len,
 		res_length += UTF8_LENGTH(c);
 	}
 
-	res = g_try_malloc(res_length + 1);
-	if (res == NULL)
-		goto error;
-
+	res = l_malloc(res_length + 1);
 	out = res;
 
 	i = 0;
@@ -2985,7 +2979,7 @@ char *convert_gsm_to_utf8_with_lang(const unsigned char *text, long len,
 		} else
 			c = gsm_locking_shift_lookup(&t, text[i]);
 
-		out += g_unichar_to_utf8(c, out);
+		out += l_utf8_from_wchar(c, out);
 
 		++i;
 	}
@@ -3037,25 +3031,25 @@ unsigned char *convert_utf8_to_gsm_with_lang(const char *text, long len,
 	long res_len;
 	long i;
 
-	if (conversion_table_init(&t, locking_lang, single_lang) == FALSE)
+	if (!conversion_table_init(&t, locking_lang, single_lang))
 		return NULL;
 
 	in = text;
 	res_len = 0;
 
 	while ((len < 0 || text + len - in > 0) && *in) {
-		long max = len < 0 ? 6 : text + len - in;
-		gunichar c = g_utf8_get_char_validated(in, max);
-		unsigned short converted = GUND;
+		long max = len < 0 ? 4 : text + len - in;
+		wchar_t c;
+		unsigned short converted;
+		int nread = l_utf8_get_codepoint(in, max, &c);
 
-		if (c & 0x80000000)
+		if (nread < 0)
 			goto err_out;
 
 		if (c > 0xffff)
 			goto err_out;
 
 		converted = unicode_locking_shift_lookup(&t, c);
-
 		if (converted == GUND)
 			converted = unicode_single_shift_lookup(&t, c);
 
@@ -3067,23 +3061,20 @@ unsigned char *convert_utf8_to_gsm_with_lang(const char *text, long len,
 		else
 			res_len += 1;
 
-		in = g_utf8_next_char(in);
+		in += nread;
 		nchars += 1;
 	}
 
-	res = g_try_malloc(res_len + (terminator ? 1 : 0));
-	if (res == NULL)
-		goto err_out;
-
+	res = l_malloc(res_len + (terminator ? 1 : 0));
 	in = text;
 	out = res;
-	for (i = 0; i < nchars; i++) {
-		unsigned short converted;
 
-		gunichar c = g_utf8_get_char(in);
+	for (i = 0; i < nchars; i++) {
+		wchar_t c;
+		unsigned short converted;
+		int nread = l_utf8_get_codepoint(in, 4, &c);
 
 		converted = unicode_locking_shift_lookup(&t, c);
-
 		if (converted == GUND)
 			converted = unicode_single_shift_lookup(&t, c);
 
@@ -3094,8 +3085,7 @@ unsigned char *convert_utf8_to_gsm_with_lang(const char *text, long len,
 
 		*out = converted;
 		++out;
-
-		in = g_utf8_next_char(in);
+		in += nread;
 	}
 
 	if (terminator)
@@ -3243,32 +3233,6 @@ unsigned char *decode_hex_own_buf(const char *in, long len, long *items_written,
 	return buf;
 }
 
-unsigned char *decode_hex(const char *in, long len, long *items_written,
-				unsigned char terminator)
-{
-	long i;
-	char c;
-	unsigned char *buf;
-
-	if (len < 0)
-		len = strlen(in);
-
-	len &= ~0x1;
-
-	for (i = 0; i < len; i++) {
-		c = toupper(in[i]);
-
-		if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'))
-			continue;
-
-		return NULL;
-	}
-
-	buf = g_new(unsigned char, (len >> 1) + (terminator ? 1 : 0));
-
-	return decode_hex_own_buf(in, len, items_written, terminator, buf);
-}
-
 /*!
  * Encodes the data using hexadecimal characters.  len can be negative,
  * in that case the terminator is used to find the last character.  This is
@@ -3313,27 +3277,8 @@ char *encode_hex_own_buf(const unsigned char *in, long len,
 	return buf;
 }
 
-char *encode_hex(const unsigned char *in, long len, unsigned char terminator)
-{
-	char *buf;
-	int i;
-
-	if (len < 0) {
-		i = 0;
-
-		while (in[i] != terminator)
-			i++;
-
-		len = i;
-	}
-
-	buf = g_new(char, len * 2 + 1);
-
-	return encode_hex_own_buf(in, len, terminator, buf);
-}
-
 unsigned char *unpack_7bit_own_buf(const unsigned char *in, long len,
-					int byte_offset, gboolean ussd,
+					int byte_offset, bool ussd,
 					long max_to_unpack, long *items_written,
 					unsigned char terminator,
 					unsigned char *buf)
@@ -3347,7 +3292,7 @@ unsigned char *unpack_7bit_own_buf(const unsigned char *in, long len,
 		return NULL;
 
 	/* In the case of CB, unpack as much as possible */
-	if (ussd == TRUE)
+	if (ussd)
 		max_to_unpack = len * 8 / 7;
 
 	for (i = 0; (i < len) && ((out-buf) < max_to_unpack); i++) {
@@ -3411,18 +3356,17 @@ unsigned char *unpack_7bit_own_buf(const unsigned char *in, long len,
 }
 
 unsigned char *unpack_7bit(const unsigned char *in, long len, int byte_offset,
-				gboolean ussd, long max_to_unpack,
+				bool ussd, long max_to_unpack,
 				long *items_written, unsigned char terminator)
 {
-	unsigned char *buf = g_new(unsigned char,
-					len * 8 / 7 + (terminator ? 1 : 0));
+	unsigned char *buf = l_malloc(len * 8 / 7 + (terminator ? 1 : 0));
 
 	return unpack_7bit_own_buf(in, len, byte_offset, ussd, max_to_unpack,
 				items_written, terminator, buf);
 }
 
 unsigned char *pack_7bit_own_buf(const unsigned char *in, long len,
-					int byte_offset, gboolean ussd,
+					int byte_offset, bool ussd,
 					long *items_written,
 					unsigned char terminator,
 					unsigned char *buf)
@@ -3495,7 +3439,7 @@ unsigned char *pack_7bit_own_buf(const unsigned char *in, long len,
 }
 
 unsigned char *pack_7bit(const unsigned char *in, long len, int byte_offset,
-				gboolean ussd, long *items_written,
+				bool ussd, long *items_written,
 				unsigned char terminator)
 {
 	int bits = 7 - (byte_offset % 7);
@@ -3522,9 +3466,9 @@ unsigned char *pack_7bit(const unsigned char *in, long len, int byte_offset,
 
 	/* Round up number of bytes, must append <cr> if true */
 	if (ussd && ((total_bits % 8) == 0) && (in[len - 1] == '\r'))
-		buf = g_new(unsigned char, (total_bits + 14) / 8);
+		buf = l_malloc((total_bits + 14) / 8);
 	else
-		buf = g_new(unsigned char, (total_bits + 7) / 8);
+		buf = l_malloc((total_bits + 7) / 8);
 
 	return pack_7bit_own_buf(in, len, byte_offset, ussd, items_written,
 					terminator, buf);
@@ -3542,8 +3486,8 @@ char *sim_string_to_utf8(const unsigned char *buffer, int length)
 	char *utf8 = NULL;
 	char *out;
 
-	if (conversion_table_init(&t, GSM_DIALECT_DEFAULT,
-					GSM_DIALECT_DEFAULT) == FALSE)
+	if (!conversion_table_init(&t, GSM_DIALECT_DEFAULT,
+					GSM_DIALECT_DEFAULT))
 		return NULL;
 
 	if (length < 1)
@@ -3574,9 +3518,7 @@ char *sim_string_to_utf8(const unsigned char *buffer, int length)
 			if (buffer[i] == 0xff && buffer[i + 1] == 0xff)
 				break;
 
-		return g_convert((char *) buffer + 1, i - 1,
-					"UTF-8//TRANSLIT", "UCS-2BE",
-					NULL, NULL, NULL);
+		return l_utf8_from_ucs2be(buffer + 1, i - 1);
 	case 0x81:
 		if (length < 3 || (buffer[1] > (length - 3)))
 			return NULL;
@@ -3650,10 +3592,7 @@ char *sim_string_to_utf8(const unsigned char *buffer, int length)
 		if (buffer[i] != 0xff)
 			return NULL;
 
-	utf8 = g_try_malloc(res_len + 1);
-	if (utf8 == NULL)
-		return NULL;
-
+	utf8 = l_malloc(res_len + 1);
 	i = offset;
 	out = utf8;
 
@@ -3668,7 +3607,7 @@ char *sim_string_to_utf8(const unsigned char *buffer, int length)
 		} else
 			c = gsm_locking_shift_lookup(&t, buffer[i++]);
 
-		out += g_unichar_to_utf8(c, out);
+		out += l_utf8_from_wchar(c, out);
 	}
 
 	*out = '\0';
@@ -3680,9 +3619,9 @@ unsigned char *utf8_to_sim_string(const char *utf, int max_length,
 					int *out_length)
 {
 	unsigned char *result;
-	unsigned char *ucs2;
+	void *ucs2;
 	long gsm_bytes;
-	gsize converted;
+	size_t converted;
 
 	result = convert_utf8_to_gsm(utf, -1, NULL, &gsm_bytes, 0);
 	if (result) {
@@ -3698,25 +3637,21 @@ unsigned char *utf8_to_sim_string(const char *utf, int max_length,
 
 	/* NOTE: UCS2 formats with an offset are never used */
 
-	ucs2 = (guint8 *) g_convert(utf, -1, "UCS-2BE//TRANSLIT", "UTF-8",
-					NULL, &converted, NULL);
-	if (ucs2 == NULL)
+	ucs2 = l_utf8_to_ucs2be(utf, &converted);
+	if (!ucs2)
 		return NULL;
+
+	/* converted includes null terminator, drop */
+	converted -= 2;
 
 	if (max_length != -1 && (int) converted + 1 > max_length)
 		converted = (max_length - 1) & ~1;
 
-	result = g_try_malloc(converted + 1);
-	if (result == NULL) {
-		g_free(ucs2);
-		return NULL;
-	}
-
-	*out_length = converted + 1;
-
+	result = l_malloc(converted + 1);
 	result[0] = 0x80;
 	memcpy(&result[1], ucs2, converted);
-	g_free(ucs2);
+	*out_length = converted + 1;
+	l_free(ucs2);
 
 	return result;
 }
@@ -3746,7 +3681,7 @@ unsigned char *convert_ucs2_to_gsm_with_lang(const unsigned char *text,
 	long res_len;
 	long i;
 
-	if (conversion_table_init(&t, locking_lang, single_lang) == FALSE)
+	if (!conversion_table_init(&t, locking_lang, single_lang))
 		return NULL;
 
 	if (len < 1 || len % 2)
@@ -3756,11 +3691,8 @@ unsigned char *convert_ucs2_to_gsm_with_lang(const unsigned char *text,
 	res_len = 0;
 
 	for (i = 0; i < len; i += 2) {
-		gunichar c = (in[i] << 8) | in[i + 1];
-		unsigned short converted = GUND;
-
-		if (c > 0xffff)
-			goto err_out;
+		uint16_t c = l_get_be16(in + i);
+		uint16_t converted = GUND;
 
 		converted = unicode_locking_shift_lookup(&t, c);
 
@@ -3778,16 +3710,14 @@ unsigned char *convert_ucs2_to_gsm_with_lang(const unsigned char *text,
 		nchars += 1;
 	}
 
-	res = g_try_malloc(res_len + (terminator ? 1 : 0));
-	if (res == NULL)
-		goto err_out;
+	res = l_malloc(res_len + (terminator ? 1 : 0));
 
 	in = text;
 	out = res;
 
 	for (i = 0; i < len; i += 2) {
-		gunichar c = (in[i] << 8) | in[i + 1];
-		unsigned short converted = GUND;
+		uint16_t c = l_get_be16(in + i);
+		uint16_t converted = GUND;
 
 		converted = unicode_locking_shift_lookup(&t, c);
 

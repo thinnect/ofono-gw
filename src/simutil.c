@@ -27,6 +27,7 @@
 #include <stdlib.h>
 
 #include <glib.h>
+#include <ell/ell.h>
 
 #include <ofono/types.h>
 #include "simutil.h"
@@ -793,14 +794,14 @@ static char *sim_network_name_parse(const unsigned char *buffer, int length,
 		spare_bits = dcs & 0x07;
 		num_char = (length * 8 - spare_bits) / 7;
 
-		unpacked_buf = unpack_7bit(buffer, length, 0, FALSE,
+		unpacked_buf = unpack_7bit(buffer, length, 0, false,
 						num_char, &written, 0);
 		if (unpacked_buf == NULL)
 			break;
 
 		ret = convert_gsm_to_utf8(unpacked_buf, written, NULL, NULL, 0);
 
-		g_free(unpacked_buf);
+		l_free(unpacked_buf);
 
 		break;
 	case 0x10:
@@ -815,9 +816,7 @@ static char *sim_network_name_parse(const unsigned char *buffer, int length,
 			if (buffer[i] == 0xff && buffer[i + 1] == 0xff)
 				break;
 
-		ret = g_convert((const char *) buffer, length,
-					"UTF-8//TRANSLIT", "UCS-2BE",
-					NULL, NULL, NULL);
+		ret = l_utf8_from_ucs2be(buffer, length);
 		break;
 	}
 
@@ -989,9 +988,9 @@ static void pnn_operator_free(struct sim_eons_operator_info *oper)
 	if (oper == NULL)
 		return;
 
-	g_free(oper->info);
-	g_free(oper->shortname);
-	g_free(oper->longname);
+	l_free(oper->info);
+	l_free(oper->shortname);
+	l_free(oper->longname);
 }
 
 struct sim_eons *sim_eons_new(int pnn_records)
@@ -1551,7 +1550,7 @@ gboolean sim_cphs_is_active(unsigned char *cphs, enum sim_cphs_service index)
 
 void sim_app_record_free(struct sim_app_record *app)
 {
-	g_free(app->label);
+	l_free(app->label);
 	g_free(app);
 }
 
@@ -1606,7 +1605,7 @@ error:
 		GSList *t = ret;
 		struct sim_app_record *app = ret->data;
 
-		g_free(app->label);
+		l_free(app->label);
 		g_free(app);
 
 		ret = ret->next;

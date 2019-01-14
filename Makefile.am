@@ -31,7 +31,8 @@ ell_headers = ell/util.h \
 			ell/random.h \
 			ell/uuid.h \
 			ell/file.h \
-			ell/uintset.h
+			ell/uintset.h \
+			ell/string.h
 
 ell_sources = ell/private.h \
 			ell/missing.h \
@@ -50,7 +51,8 @@ ell_sources = ell/private.h \
 			ell/random.c \
 			ell/uuid.c \
 			ell/file.c \
-			ell/uintset.c
+			ell/uintset.c \
+			ell/string.c
 
 ell_libell_internal_la_SOURCES = $(ell_headers) $(ell_sources)
 endif
@@ -907,36 +909,36 @@ noinst_PROGRAMS = $(unit_tests) \
 			unit/test-sms-root unit/test-mux unit/test-caif
 
 unit_test_common_SOURCES = unit/test-common.c src/common.c src/util.c
-unit_test_common_LDADD = @GLIB_LIBS@
+unit_test_common_LDADD = @GLIB_LIBS@ $(ell_ldadd)
 unit_objects += $(unit_test_common_OBJECTS)
 
 unit_test_util_SOURCES = unit/test-util.c src/util.c
-unit_test_util_LDADD = @GLIB_LIBS@
+unit_test_util_LDADD = @GLIB_LIBS@ $(ell_ldadd)
 unit_objects += $(unit_test_utils_OBJECTS)
 
 unit_test_simutil_SOURCES = unit/test-simutil.c src/util.c \
                                 src/simutil.c src/smsutil.c src/storage.c
-unit_test_simutil_LDADD = @GLIB_LIBS@
+unit_test_simutil_LDADD = @GLIB_LIBS@ $(ell_ldadd)
 unit_objects += $(unit_test_simutil_OBJECTS)
 
 unit_test_stkutil_SOURCES = unit/test-stkutil.c unit/stk-test-data.h \
 				src/util.c \
                                 src/storage.c src/smsutil.c \
                                 src/simutil.c src/stkutil.c
-unit_test_stkutil_LDADD = @GLIB_LIBS@
+unit_test_stkutil_LDADD = @GLIB_LIBS@ $(ell_ldadd)
 unit_objects += $(unit_test_stkutil_OBJECTS)
 
 unit_test_sms_SOURCES = unit/test-sms.c src/util.c src/smsutil.c src/storage.c
-unit_test_sms_LDADD = @GLIB_LIBS@
+unit_test_sms_LDADD = @GLIB_LIBS@ $(ell_ldadd)
 unit_objects += $(unit_test_sms_OBJECTS)
 
 unit_test_cdmasms_SOURCES = unit/test-cdmasms.c src/cdma-smsutil.c
-unit_test_cdmasms_LDADD = @GLIB_LIBS@
+unit_test_cdmasms_LDADD = @GLIB_LIBS@ $(ell_ldadd)
 unit_objects += $(unit_test_cdmasms_OBJECTS)
 
 unit_test_sms_root_SOURCES = unit/test-sms-root.c \
 					src/util.c src/smsutil.c src/storage.c
-unit_test_sms_root_LDADD = @GLIB_LIBS@
+unit_test_sms_root_LDADD = @GLIB_LIBS@ $(ell_ldadd)
 unit_objects += $(unit_test_sms_root_OBJECTS)
 
 unit_test_mux_SOURCES = unit/test-mux.c $(gatchat_sources)
@@ -962,28 +964,32 @@ unit_test_rilmodem_cs_SOURCES = $(test_rilmodem_sources) \
 					unit/test-rilmodem-cs.c \
 					drivers/rilmodem/call-settings.c
 unit_test_rilmodem_cs_LDADD = gdbus/libgdbus-internal.la $(builtin_libadd) \
-					@GLIB_LIBS@ @DBUS_LIBS@ -ldl
+					@GLIB_LIBS@ @DBUS_LIBS@ \
+					$(ell_ldadd) -ldl
 unit_objects += $(unit_test_rilmodem_cs_OBJECTS)
 
 unit_test_rilmodem_sms_SOURCES = $(test_rilmodem_sources) \
 					unit/test-rilmodem-sms.c \
 					drivers/rilmodem/sms.c
 unit_test_rilmodem_sms_LDADD = gdbus/libgdbus-internal.la $(builtin_libadd) \
-					@GLIB_LIBS@ @DBUS_LIBS@ -ldl
+					@GLIB_LIBS@ @DBUS_LIBS@ \
+					$(ell_ldadd) -ldl
 unit_objects += $(unit_test_rilmodem_sms_OBJECTS)
 
 unit_test_rilmodem_cb_SOURCES = $(test_rilmodem_sources) \
 					unit/test-rilmodem-cb.c \
 					drivers/rilmodem/call-barring.c
 unit_test_rilmodem_cb_LDADD = gdbus/libgdbus-internal.la $(builtin_libadd) \
-					@GLIB_LIBS@ @DBUS_LIBS@ -ldl
+					@GLIB_LIBS@ @DBUS_LIBS@ \
+					$(ell_ldadd) -ldl
 unit_objects += $(unit_test_rilmodem_cb_OBJECTS)
 
 unit_test_rilmodem_gprs_SOURCES = $(test_rilmodem_sources) \
 					unit/test-rilmodem-gprs.c \
 					drivers/rilmodem/gprs.c
 unit_test_rilmodem_gprs_LDADD = gdbus/libgdbus-internal.la $(builtin_libadd) \
-					@GLIB_LIBS@ @DBUS_LIBS@ -ldl
+					@GLIB_LIBS@ @DBUS_LIBS@ \
+					$(ell_ldadd) -ldl
 unit_objects += $(unit_test_rilmodem_gprs_OBJECTS)
 
 unit_test_mbim_SOURCES = unit/test-mbim.c \

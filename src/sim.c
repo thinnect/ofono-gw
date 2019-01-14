@@ -36,6 +36,8 @@
 #include <errno.h>
 #include <unistd.h>
 
+#include <ell/ell.h>
+
 #include "ofono.h"
 
 #include "common.h"
@@ -349,8 +351,8 @@ static char **get_service_numbers(GSList *service_numbers)
 static void service_number_free(gpointer pointer)
 {
 	struct service_number *num = pointer;
-	g_free(num->id);
-	g_free(num);
+	l_free(num->id);
+	l_free(num);
 }
 
 static void call_state_watches(struct ofono_sim *sim)
@@ -927,7 +929,7 @@ static void sim_get_image_cb(struct ofono_sim *sim,
 	if (cache)
 		sim_fs_cache_image(sim->simfs, (const char *) xpm, id);
 
-	g_free(xpm);
+	l_free(xpm);
 }
 
 static void sim_iidf_read_clut_cb(int ok, int length, int record,
@@ -1285,27 +1287,26 @@ static void sim_sdn_read_cb(int ok, int length, int record,
 	if (sim_adn_parse(data, record_length, &ph, &alpha) == FALSE)
 		goto out;
 
-
 	/* Use phone number if Id is unavailable */
 	if (alpha && alpha[0] == '\0') {
-		g_free(alpha);
+		l_free(alpha);
 		alpha = NULL;
 	}
 
 	if (alpha == NULL)
-		alpha = g_strdup(phone_number_to_string(&ph));
+		alpha = l_strdup(phone_number_to_string(&ph));
 
 	if (sim->service_numbers &&
 			g_slist_find_custom(sim->service_numbers,
 				alpha, service_number_compare)) {
 		ofono_error("Duplicate EFsdn entries for `%s'",
 				alpha);
-		g_free(alpha);
+		l_free(alpha);
 
 		goto out;
 	}
 
-	sdn = g_new(struct service_number, 1);
+	sdn = l_new(struct service_number, 1);
 	sdn->id = alpha;
 	memcpy(&sdn->ph, &ph, sizeof(struct ofono_phone_number));
 
@@ -2512,10 +2513,10 @@ static void sim_spn_close(struct ofono_sim *sim)
 
 	sim->reading_spn = false;
 
-	g_free(sim->spn);
+	l_free(sim->spn);
 	sim->spn = NULL;
 
-	g_free(sim->spn_dc);
+	l_free(sim->spn_dc);
 	sim->spn_dc = NULL;
 }
 
@@ -2829,10 +2830,10 @@ static void sim_spn_set(struct ofono_sim *sim, const void *data, int length,
 	DBusConnection *conn = ofono_dbus_get_connection();
 	const char *path = __ofono_atom_get_path(sim->atom);
 
-	g_free(sim->spn);
+	l_free(sim->spn);
 	sim->spn = NULL;
 
-	g_free(sim->spn_dc);
+	l_free(sim->spn_dc);
 	sim->spn_dc = NULL;
 
 	if (data == NULL)
@@ -2861,13 +2862,13 @@ static void sim_spn_set(struct ofono_sim *sim, const void *data, int length,
 	}
 
 	if (strlen(sim->spn) == 0) {
-		g_free(sim->spn);
+		l_free(sim->spn);
 		sim->spn = NULL;
 		goto notify;
 	}
 
 	if (dc)
-		sim->spn_dc = g_memdup(dc, 1);
+		sim->spn_dc = l_memdup(dc, 1);
 
 notify:
 	if (sim->spn)
@@ -3399,17 +3400,17 @@ static void sim_file_changed_flush(struct ofono_sim *sim, int id)
 	sim_fs_cache_flush_file(sim->simfs, id);
 }
 
-void __ofono_sim_refresh(struct ofono_sim *sim, GSList *file_list,
-			ofono_bool_t full_file_change, ofono_bool_t naa_init)
+void __ofono_sim_refresh(struct ofono_sim *sim, struct l_queue *files,
+				bool full_file_change, bool naa_init)
 {
-	GSList *l;
-	gboolean reinit_naa = naa_init || full_file_change;
+	const struct l_queue_entry *l;
+	bool reinit_naa = naa_init || full_file_change;
 
 	/*
 	 * Check if any files used in SIM initialisation procedure
 	 * are affected, except EFiccid, EFpl, EFli.
 	 */
-	for (l = file_list; l; l = l->next) {
+	for (l = l_queue_get_entries(files); l; l = l->next) {
 		struct stk_file *file = l->data;
 		uint32_t mf, df, ef;
 
@@ -3450,7 +3451,7 @@ void __ofono_sim_refresh(struct ofono_sim *sim, GSList *file_list,
 	if (full_file_change)
 		sim_fs_cache_flush(sim->simfs);
 	else {
-		for (l = file_list; l; l = l->next) {
+		for (l = l_queue_get_entries(files); l; l = l->next) {
 			struct stk_file *file = l->data;
 			int id = (file->file[file->len - 2] << 8) |
 				(file->file[file->len - 1] << 0);
@@ -3475,7 +3476,7 @@ void __ofono_sim_refresh(struct ofono_sim *sim, GSList *file_list,
 	if (full_file_change)
 		sim_fs_notify_file_watches(sim->simfs, -1);
 	else {
-		for (l = file_list; l; l = l->next) {
+		for (l = l_queue_get_entries(files); l; l = l->next) {
 			struct stk_file *file = l->data;
 			int id = (file->file[file->len - 2] << 8) |
 				(file->file[file->len - 1] << 0);
