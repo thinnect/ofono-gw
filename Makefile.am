@@ -160,6 +160,9 @@ gril_sources = gril/gril.h gril/gril.c \
 
 btio_sources = btio/btio.h btio/btio.c
 
+gpio_sources = gpio/sysfsio.h gpio/sysfsio.c
+builtin_sources += $(gpio_sources)
+
 if UDEV
 builtin_cflags += @UDEV_CFLAGS@
 builtin_libadd += @UDEV_LIBS@
@@ -747,7 +750,7 @@ AM_CFLAGS = @DBUS_CFLAGS@ @GLIB_CFLAGS@ $(ell_cflags) $(builtin_cflags) \
 
 AM_CPPFLAGS = -I$(builddir)/include -I$(builddir)/src -I$(srcdir)/src \
 			-I$(srcdir)/gdbus -I$(srcdir)/gisi -I$(srcdir)/gatchat \
-			-I$(srcdir)/btio -I$(srcdir)/gril
+			-I$(srcdir)/btio -I$(srcdir)/gril -I$(srcdir)/gpio
 
 doc_files = doc/overview.txt doc/ofono-paper.txt doc/release-faq.txt \
 		doc/manager-api.txt doc/modem-api.txt doc/network-api.txt \
