@@ -503,6 +503,7 @@ static void set_online(struct ofono_modem *modem, ofono_bool_t new_online)
 	if (new_online) {
 		sysfs_gpio_set(115, 0);
 		sysfs_gpio_set(65, 0);
+		DBG("MODEM RESET");
 		g_usleep(500000);
 		sysfs_gpio_set(65, 1);
 		sysfs_gpio_set(115, 1);
