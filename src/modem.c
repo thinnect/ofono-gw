@@ -507,6 +507,7 @@ static void set_online(struct ofono_modem *modem, ofono_bool_t new_online)
 		g_usleep(500000);
 		sysfs_gpio_set(65, 1);
 		sysfs_gpio_set(115, 1);
+		g_usleep(5000000);
 	}
 
 	ofono_dbus_signal_property_changed(conn, modem->path,
