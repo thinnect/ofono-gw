@@ -194,6 +194,8 @@ static gboolean event_check(GSource *source)
 static GSourceFuncs event_funcs = {
 	.prepare = event_prepare,
 	.check = event_check,
+	// .dispatch is NULL
+	// .finalize is NULL
 };
 
 int main(int argc, char **argv)
@@ -233,15 +235,20 @@ int main(int argc, char **argv)
 		}
 	}
 
+	// Create event loop
 	event_loop = g_main_loop_new(NULL, FALSE);
 
 	l_log_set_stderr();
 	l_debug_enable("*");
 	l_main_init();
 
+	// Create an event source with only prepare() and check()
+	// functions and a file descriptor
 	source = (struct ell_event_source *) g_source_new(&event_funcs,
 					sizeof(struct ell_event_source));
 
+	// Get the epoll file descriptor from ELL's main event
+	// loop using
 	source->pollfd.fd = l_main_get_epoll_fd();
 	source->pollfd.events = G_IO_IN | G_IO_HUP | G_IO_ERR;
 
@@ -282,6 +289,7 @@ int main(int argc, char **argv)
 	g_free(option_plugin);
 	g_free(option_noplugin);
 
+	// Run the glib event loop using ELL's epoll file descriptor
 	g_main_loop_run(event_loop);
 
 	__ofono_plugin_cleanup();
